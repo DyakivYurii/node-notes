@@ -1,22 +1,13 @@
 const cors = require('cors');
 const morgan = require('morgan');
-const pg = require('pg');
-const knex = require('knex');
 
-const userRoute = require('./routes/users');
+const userRoute = require('./routes/users/users');
+const tasksRoute = require('./routes/tasks');
+const authRoute = require('./routes/auth/auth');
+const loginRoute = require('./routes/authUser');
 
 const express = require('express');
 const app = express();
-
-const db = knex({
-  client: 'pg',
-  connection: {
-    host: '127.0.0.1',
-    user: '',
-    password: '',
-    database: ''
-  }
-});
 
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'));
@@ -28,6 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.use('/api/users/', userRoute);
+app.use('/api/tasks/', tasksRoute);
+// app.use('/api/auth/', authRoute);
+app.use('/api/login/', loginRoute);
 
 app.get('/', (req, res) => {
   console.log(`Did a request`);
@@ -45,4 +39,4 @@ const start = () => {
   }
 };
 
-module.exports = { start, db };
+module.exports = { start };
